@@ -1,8 +1,14 @@
+import { Observable } from '@reactivex/rxjs';
+
 const JUPYTER_WIDGET_COMM_TARGET = 'jupyter.widget';
 const JUPYTER_WIDGET_VERSION_COMM_TARGET = 'jupyter.widget.version';
 
 export class NotebookBackend {
   constructor(Jupyter) {
+    this._iopubStream = Observable.create(observer => {
+      this._iopubObserver = observer;
+    });
+
     this._Jupyter = Jupyter;
     this._registerCommTarget(this._getConnectedKernel())
       .catch(err => console.error(`couldn't register comm targets`, err));
@@ -13,7 +19,7 @@ export class NotebookBackend {
   }
 
   _handleMsg(msg) {
-    console.log('msg');
+    this._iopubObserver.onNext(msg);
   }
 
   _handleWidget(comm, msg) {
@@ -30,8 +36,8 @@ export class NotebookBackend {
 
   _registerCommTarget(kernel) {
     return Promise.resolve(kernel).then(kernel => {
-      kernel.comm_manager.register_target(JUPYTER_WIDGET_COMM_TARGET, this._handleWidget);
-      kernel.comm_manager.register_target(JUPYTER_WIDGET_VERSION_COMM_TARGET, this._handleWidgetVersion);
+      kernel.comm_manager.register_target(JUPYTER_WIDGET_COMM_TARGET, this._handleWidget.bind(this));
+      kernel.comm_manager.register_target(JUPYTER_WIDGET_VERSION_COMM_TARGET, this._handleWidgetVersion.bind(this));
 
       // HACK: Prevent targets from being overwritten by ipywidgets.
       const original = kernel.comm_manager.register_target.bind(kernel.comm_manager);

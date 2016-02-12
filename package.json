@@ -20,6 +20,9 @@
   "bugs": {
     "url": "https://github.com/jdfreder/widgets-test/issues"
   },
+  "dependencies": {
+    "@reactivex/rxjs": "^5.0.0-beta.2"
+  },
   "homepage": "https://github.com/jdfreder/widgets-test#readme",
   "babel": {
     "presets": [
