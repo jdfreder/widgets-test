@@ -1,0 +1,38 @@
+{
+  "name": "widgets-test",
+  "version": "0.0.1",
+  "description": "An unopinionated widget framework",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "webpack",
+    "prepublish": "npm run build",
+    "notebook:install": "mkdirp $(jupyter --data-dir)/nbextensions/widgets-test; ln -s $(pwd)/web-notebook/index.js $(jupyter --data-dir)/nbextensions/widgets-test/index.js; npm run notebook:enable",
+    "notebook:enable": "jupyter nbextension enable widgets-test/index",
+    "notebook:disable": "jupyter nbextension disable widgets-test/index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdfreder/widgets-test.git"
+  },
+  "author": "Jonathan Frederic",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/jdfreder/widgets-test/issues"
+  },
+  "homepage": "https://github.com/jdfreder/widgets-test#readme",
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "sourceMaps": true
+  },
+  "devDependencies": {
+    "babel-core": "^6.5.1",
+    "babel-loader": "^6.2.2",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "mkdirp": "^0.5.1",
+    "webpack": "^1.12.13"
+  }
+}
